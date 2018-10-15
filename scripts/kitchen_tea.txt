@@ -1,0 +1,18 @@
+O173	kettle	1
+S107	empty
+O181	faucet	0
+S115	flowing water
+O38	stove	1
+S229	off
+O64	cup	0
+S107	empty
+O141	tea bag	1
+S357	in packet
+O2	bowl	0
+S195	ingredients inside	{sugar}
+O0	sugar	0
+S160	in bowl
+O22	spoon	1
+S58	clean
+O371	stirring rod	1
+S58	clean

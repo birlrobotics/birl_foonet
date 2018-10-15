@@ -1,0 +1,80 @@
+O1000	object1	0
+S0	on the table	
+O2000	robot_state	1
+S100	ReadyPose	
+M10	move_prepick_w_emptyhand	Assumed	Assumed
+O1000	object1	0
+S0	on the table	
+O2000	robot_state	1
+S101	Pickingpose	
+//
+O1000	object1	1
+S0	on the table	
+O2000	robot_state	1
+S101	Pickingpose	
+M4	pick	Assumed	Assumed
+O1000	object1	1
+S0	on the table	
+O2000	robot_state	1
+S102	PickingObject	
+//
+O1000	object1	1
+S0	on the table	
+O2000	robot_state	1
+S102	PickingObject	
+M5	movetoprepickposewithfullhand	Assumed	Assumed
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S103	ReadyToPlacingObject	
+//
+O1000	object1	1
+S0	on the table	
+O2000	robot_state	1
+S102	PickingObject	
+M5	movetoprepickposewithfullhand	Assumed	Assumed
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S103	ReadyToPlacingObject	
+//
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S103	ReadyToPlacingObject	
+M6	movetopreplaceposewithemptyhand	Assumed	Assumed
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S104	PlacingObject	
+//
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S104	PlacingObject	
+M8	place	Assumed	Assumed
+O1000	object1	1
+S2	on the container	
+O2000	robot_state	1
+S105	AlreadyPlacing	
+//
+O1000	object1	1
+S1	on the gripper	
+O2000	robot_state	1
+S104	PlacingObject	
+M8	place	Assumed	Assumed
+O1000	object1	1
+S2	on the container	
+O2000	robot_state	1
+S105	AlreadyPlacing	
+//
+O1000	object1	1
+S2	on the container	
+O2000	robot_state	1
+S105	AlreadyPlacing	
+M9	movetopreplaceposewithemptyhand	Assumed	Assumed
+O1000	object1	1
+S2	on the container	
+O2000	robot_state	1
+S106	GoBack	
+//

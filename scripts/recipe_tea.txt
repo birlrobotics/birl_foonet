@@ -1,0 +1,80 @@
+O173	kettle	1
+S107	empty
+O181	faucet	0
+S115	flowing water
+M72	fill	Assumed	Assumed
+O46	water	0
+S358	in kettle
+O173	kettle	0
+S195	ingredients inside	{water}
+//
+O38	stove	1
+S229	off
+M42	turn on	Assumed	Assumed
+O38	stove	0
+S151	heated
+//
+O173	kettle	1
+S195	ingredients inside	{water}
+O38	stove	0
+S151	heated
+M41	heat	Assumed	Assumed
+O46	water	0
+S25	boiling
+O173	kettle	0
+S26	boiling water	{water}
+//
+O173	kettle	1
+S26	boiling water	{water}
+O64	cup	0
+S107	empty
+M4	pour	Assumed	Assumed
+O46	water	0
+S165	in cup
+O64	cup	0
+S193	ingredients heated inside	{water}
+//
+O141	tea bag	1
+S357	in packet
+M73	rip open	Assumed	Assumed
+O141	tea bag	0
+S105	dry
+//
+O141	tea bag	1
+S105	dry
+O64	cup	0
+S193	ingredients heated inside	{water}
+M26	dip	Assumed	Assumed
+O141	tea bag	0
+S314	soaked
+O64	cup	0
+S193	ingredients heated inside	{water,tea}
+//
+O64	cup	0
+S193	ingredients heated inside	{water,tea}
+O2	bowl	0
+S195	ingredients inside	{sugar}
+O0	sugar	0
+S160	in bowl
+O22	spoon	1
+S58	clean
+M3	scoop	Assumed	Assumed
+O0	sugar	0
+S165	in cup
+O22	spoon	0
+S102	dirty
+O64	cup	0
+S193	ingredients heated inside	{water,tea,sugar}
+//
+O64	cup	0
+S193	ingredients heated inside	{water,tea,sugar}
+O371	stirring rod	1
+S58	clean
+M6	stir	Assumed	Assumed
+O371	stirring rod	0
+S102	dirty
+O64	cup	0
+S198	ingredients mixed inside	{water,tea,sugar}
+O62	tea	0
+S360	sweetened tea
+//

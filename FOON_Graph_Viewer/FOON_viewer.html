@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css" media="screen">
+    svg {
+      display: block;
+      border: 1px solid #ccc;
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      width: 90%;
+      height: 90%;
+      background: #fff;
+    }
+
+    svg {
+      border: 1px solid black;
+    }
+  </style>
+  <script type="text/javascript" src="d3.min.js"></script>
+  <script type="text/javascript" src="FOON_classes.js"></script>
+  <script type="text/javascript" src="FOON_functions.js"></script>
+  <svg width="1000" height="1000"></svg>
+</head>
+
+<body>
+  <center>
+    <input type='file' accept='text/plain' onchange='openFile(event)'>
+    <script>
+      // Reading a text file denoting a FOON graph
+      // SOURCE: https://www.javascripture.com/FileReader
+      var openFile = function (event) {
+        clear();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function () {
+          var text = reader.result;
+          var FOON_graph = text.split("\n");
+          init(FOON_graph);
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+  </center>
+</body>
+
+</html>
