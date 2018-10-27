@@ -1,0 +1,56 @@
+O1	object_1	1
+S1	on the table  	
+O2	object_2	1
+S1	on the table  	
+O3	object_3	1
+S1	on the table  	
+M0	pick	Assumed	Assumed
+O1	object_1	1
+S2	in the gripper  	
+O2	object_2	1
+S2	in the gripper   	
+O3	object_3	1
+S2	in the gripper  	
+//
+O1	object_1	1
+S1	on the table  	
+O2	object_2	1
+S1	on the table  	
+O3	object_3	1
+S1	on the table  	
+M0	pick	Assumed	Assumed
+O1	object_1	1
+S2	in the gripper  	
+O2	object_2	1
+S2	in the gripper   	
+O3	object_3	1
+S2	in the gripper  	
+//
+O1	object_1	1
+S1	on the table  	
+O2	object_2	1
+S1	on the table  	
+O3	object_3	1
+S1	on the table  	
+M0	pick	Assumed	Assumed
+O1	object_1	1
+S2	in the gripper  	
+O2	object_2	1
+S2	in the gripper   	
+O3	object_3	1
+S2	in the gripper  	
+//
+O1	object_1	1
+S2	in the gripper  	
+O2	object_2	1
+S2	in the gripper   	
+O3	object_3	1
+S2	in the gripper  	
+M1	place	Assumed	Assumed
+O1	object_1	1
+S3	in the box  	
+O2	object_2	1
+S3	in the box    	
+O3	object_3	1
+S3	in the box    	
+//

@@ -1,5 +1,7 @@
 import sys, time, collections;
 import FOON_classes as FOON;
+import ipdb
+import re
 
 # -- Last updated: 6/23/2017
 
@@ -48,7 +50,6 @@ def constructFUGraph(file_name):
 
 	x = 0;
 	while x < len(items):
-		print "x is %s" %x
 		line = items[x];
 		objectExisting = -1;
 		if line.startswith("//"):
@@ -342,11 +343,11 @@ def findAllPaths():
 #endef
 
 def taskTreeRetrieval():
-	environment = identifyKitchenItems('kitting_experiment_test.txt'); # -- kitchen items needed to find the solution
+	environment = identifyKitchenItems('kitting_experiment_objects.txt'); # -- kitchen items needed to find the solution
 	# goalType = raw_input("Please type the goal node's TYPE here: > ");
 	# goalState = raw_input("Please type the goal node's STATE here: > ");
-	goalType = '2000'
-	goalState = '106'
+	goalType = '1'
+	goalState = '3'
 	goalNode = FOON.Object(int(goalType), int(goalState));
 
 	# hierarchy_level = int(raw_input("At what level is the search being done? [1/2/3] > "));
@@ -584,18 +585,30 @@ def taskTreeRetrieval():
 					itemsToSearch.append(tempObject);
 
 	# -- saving task tree sequence to file..
-	_file = open("FOON_task-tree-for-O" + goalType + "_S" + goalState + "_Lvl" + str(hierarchy_level) + ".txt", 'w');
+	# _file = open("FOON_task-tree-for-O" + goalType + "_S" + goalState + "_Lvl" + str(hierarchy_level) + ".txt", 'w');
 
-	for FU in taskTree:
-		# -- just write all functional units that were put into the list:
-		FU.printFunctionalUnit();
-		_file.write(FU.getInputsForFile());
-		_file.write(FU.getMotionForFile());
-		_file.write(FU.getOutputsForFile());
-		_file.write("//\n");
+	# for FU in taskTree:
+	# 	# -- just write all functional units that were put into the list:
+	# 	FU.printFunctionalUnit();
+	# 	_file.write(FU.getInputsForFile());
+	# 	_file.write(FU.getMotionForFile());
+	# 	_file.write(FU.getOutputsForFile());
+	# 	_file.write("//\n");
 	#endfor
-	return True;
+	return taskTree;
 #endef
+
+def get_object_info(task_tree):
+	object_id = []
+	object_state_id = []
+    
+	for FU in task_tree:
+		tmp = re.split('\t|\n',FU.getInputsForFile())
+		if tmp[0].startswith("O"):
+			object_id.append(int(tmp[0][1:]))
+		if tmp[3].startswith("S"):
+			object_state_id.append(tmp[3])
+	return list(set(object_id))
 
 totalNodes = constructFUGraph('kitting_experiment_lib.txt'); # -- NOTE: replace text file here with any subgraph/FOON graph file.
 
@@ -607,6 +620,10 @@ print " -> number of units in level 1: " + str(len(FOON_Lvl1));
 for F in FOON_Lvl3:
 	F.printFunctionalUnit();
 	print "//";
-
+# ipdb.set_trace()
 # findAllPaths(); # -- use this to find all paths to making an object
-taskTreeRetrieval(); # -- use this to find a task tree
+task_tree = taskTreeRetrieval(); # -- use this to find a task tree
+tracking_objects_list = get_object_info(task_tree)
+
+
+

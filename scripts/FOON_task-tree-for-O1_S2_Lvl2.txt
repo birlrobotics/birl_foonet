@@ -1,0 +1,6 @@
+O1	box_object	1
+S1	on the table  	
+M0	pick	Assumed	Assumed
+O1	box_object	1
+S2	in the gripper   	
+//

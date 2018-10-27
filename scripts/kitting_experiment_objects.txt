@@ -1,0 +1,6 @@
+O1	object_1	1
+S1	on the table  
+O2	object_2	1
+S1	on the table  
+O3	object_3	1
+S1	on the table  
