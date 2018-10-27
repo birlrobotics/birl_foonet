@@ -1,3 +1,0 @@
-goalnode = XX
-Environment = []
-library = []

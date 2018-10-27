@@ -1,8 +1,0 @@
-O65	mixer	0
-S325	with bowl
-O2	bowl	0
-S326	with mixer
-O64	cup	1
-S182	ingredients inside	{cream}
-O66	cream	1
-S195	liquid
