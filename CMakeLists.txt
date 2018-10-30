@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   trajectory_msgs
   message_generation
+  ar_track_alvar_msgs
 
 )
 
@@ -67,16 +68,15 @@ add_service_files(
 )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+  FILES
+  Foonet.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  control_msgs  geometry_msgs  sensor_msgs  std_msgs  trajectory_msgs  # Or other packages containing msgs
+  control_msgs  geometry_msgs  sensor_msgs  std_msgs  trajectory_msgs ar_track_alvar_msgs # Or other packages containing msgs
 )
 
 ################################################
@@ -111,7 +111,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES birl_foonet
-CATKIN_DEPENDS actionlib control_msgs geometry_msgs roscpp rospy sensor_msgs smach std_msgs trajectory_msgs message_runtime 
+CATKIN_DEPENDS actionlib control_msgs geometry_msgs roscpp rospy sensor_msgs smach std_msgs trajectory_msgs message_runtime ar_track_alvar_msgs
 )
 
 ###########

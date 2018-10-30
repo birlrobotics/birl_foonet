@@ -1,0 +1,10 @@
+#goal definition
+int32[] object_id
+---
+#result definition
+birl_foonet/foonet[] object_pose
+int32[] missing_id
+---
+#feedback
+birl_foonet/foonet[] object_pose
+int32[] missing_id

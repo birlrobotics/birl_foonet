@@ -1,4 +1,4 @@
-int32  object_id
-bool  object_state  
-geometry_msgs/PoseStamped  pose_list
+Header header
+uint32 object_id
+geometry_msgs/Pose pose
 
