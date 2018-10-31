@@ -1,7 +1,5 @@
 import sys, time, collections;
 import FOON_classes as FOON;
-import ipdb
-import re
 
 # -- Last updated: 6/23/2017
 
@@ -104,7 +102,7 @@ def constructFUGraph(file_name):
 				nodes_Lvl3.append(newObject);
 				objectIndex = count;
 				count += 1;
-			print objectParts
+
 			if isInput == True:
 				# -- this Object will be an input node to the FU:
 				newFU_lvl3.addObjectNode(nodes_Lvl3[objectIndex], 1, int(objectParts[2]));
@@ -209,7 +207,6 @@ def identifyKitchenItems(file_name):
 		x += 1;
 		line = items[x];
 		stateParts = line.split("S"); # get the Object's state identifier by splitting first instance of S
-		print objectParts
 		stateParts = stateParts[1].split("\t");
 
 		# -- create a new object which is equal to the kitchenItem and add it to the list:
@@ -344,14 +341,12 @@ def findAllPaths():
 
 def taskTreeRetrieval():
 	environment = identifyKitchenItems('kitting_experiment_objects.txt'); # -- kitchen items needed to find the solution
-	# goalType = raw_input("Please type the goal node's TYPE here: > ");
-	# goalState = raw_input("Please type the goal node's STATE here: > ");
-	goalType = '1'
-	goalState = '3'
+	goalType = raw_input("Please type the goal node's TYPE here: > ");
+	goalState = raw_input("Please type the goal node's STATE here: > ");
 	goalNode = FOON.Object(int(goalType), int(goalState));
 
-	# hierarchy_level = int(raw_input("At what level is the search being done? [1/2/3] > "));
-	hierarchy_level = 2
+	hierarchy_level = int(raw_input("At what level is the search being done? [1/2/3] > "));
+
 	searchNodes = None; searchFOON = None;
 
 	if hierarchy_level == 1:
@@ -366,7 +361,7 @@ def taskTreeRetrieval():
 	else:
 		exit();
 
-	# -- first part: check if the goal object actually exists in the network (recipe_tea.txt):
+	# -- first part: check if the object actually exists in the network:
 	index = -1;
 	for T in searchNodes:
 		if isinstance(T, FOON.Object) and T.equals_functions[hierarchy_level-1](goalNode):
@@ -405,43 +400,31 @@ def taskTreeRetrieval():
 			# -- this means that the object exists in FOON; if not..
 			kitchen.append(searchNodes[index]);
 	#endfor
-    
+
 	max_iterations = 0; prior = -1; further = -1;
 	depth = 100000; # -- maximum number of times you can "see" the original goal node.
-    ## start in the algorithm ##
+
 	while itemsToSearch:
-		print "length of itemsToSearch %s" %len(itemsToSearch)
 		# -- Remove the item we are trying to make from the queue of items we need to learn how to make
 		tempObject = itemsToSearch.popleft();
 		tempObject.printObject_Lvl3();
 
 		# -- sort-of a time-out for the search if it does not produce an answer dictated by the amount of time it takes.
-		print "prior %s" %prior
-		print "further %s" %further
-		print "length of itemsToSearch %s" %len(itemsToSearch)
 		if prior == len(itemsToSearch) and further == prior:
 			max_iterations += 1;
 
-		print "max_iterations %s" %max_iterations
-		print "depth %s" %depth
 		if max_iterations > depth:	# just the worst possible way of doing this, but will do for now.
 			return False;
 
 		further = prior;
-		print "further %s" %further
 		prior = len(itemsToSearch);
-		print "prior is %s" %prior
 
 		flag = False;
-		# check if goal object in kitchen
 		for S in kitchen:
-			# print S.printObject_Lvl2()
-			# print goalNode.printObject_Lvl2()
 			if S.equals_functions[hierarchy_level-1](goalNode):
-				print "flag %s" %flag
 				flag = True;
 				break;
-		print "flag is %s" %flag
+
 		if flag == True:
 			# -- If we found the item already, why continue searching? (Base case)
 			#		therefore we break here!
@@ -449,35 +432,27 @@ def taskTreeRetrieval():
 
 		flag = False;
 		for S in kitchen:
-			print S.printObject_Lvl2()
-			print tempObject.printObject_Lvl2()
 			if S.equals_functions[hierarchy_level-1](tempObject):
-				print "flag is %s" %flag
 				flag = True;
 				break;
-		print "flag is %s" %flag
+
 		if flag == True:
 			# just proceed to next iteration, as we already know how to make current item!
 			continue;
 
 		numProcedures = 0;
 		for FU in searchFOON:
-			print FU.printFunctionalUnit()
 			# -- searching for all functional units with our goal as output
 			found = -1;
 			for N in FU.getOutputList():
-				print N.printObject_Lvl2()
-				print tempObject.printObject_Lvl2()
 				if N.equals_functions[hierarchy_level-1](tempObject):
-					print "get inside"
 					found += 1;
 			# -- only add a functional unit if it produces a specific output.
-			print "found is %s" %found
 			if found > -1:
 				FUtoSearch.append(FU);
 				tree_allPaths.append(FU);
 				numProcedures += 1;
-		print "numProcedures is %s" %numProcedures
+
 		# -- this means that there is NO solution to making an object,
 		#		and so we just need to add it as something we still need to learn how to make.
 		# -- this should probably indicate that there is no task tree.
@@ -496,44 +471,32 @@ def taskTreeRetrieval():
 					break;
 
 			if found == False:
-				print "ready to put"
 				itemsToSearch.put(tempObject);
 
 		while FUtoSearch:
 			tempFU = FUtoSearch.pop();
-			print tempFU.printFunctionalUnit()
 			count = 0;
 			for T in tempFU.getInputList():
 				flag = False;
 				for U in kitchen:
-					# print U.printObject_Lvl2()
-					# print T.printObject_Lvl2()
 					if U.equals_functions[hierarchy_level-1](T):
-						print "get inside"
 						flag = True;
 						break;
-				print "flag is %s" %flag
 				if flag == False:
-					# -- if an item is not in the "objects found" list, 
+					# -- if an item is not in the "objects found" list,
 					#		then we add it to the list of items we then need to explore and find out how to make.
 					for U in itemsToSearch:
-						# print U.printObject_Lvl2()
-						# print T.printObject_Lvl2()
 						if U.equals_functions[hierarchy_level-1](T):
-							print "get inside"
 							flag = True;
 							break;
-					print "flag is %s" %flag
 					if flag == False:
-						print T.printObject_Lvl2()
 						itemsToSearch.append(T);
 				else :
 					# keeping track of whether we have all items for a functional unit or not!
 					count += 1;
-			print "count %s" %count
+
 			numProcedures -= 1;
-			print "tempFU.getNumberOfInputs %s" %tempFU.getNumberOfInputs()
-			print "numProcedures %s" %numProcedures
+
 			if count == tempFU.getNumberOfInputs():
 				# We will have all items needed to make something;
 				#	add that item to the "kitchen", as we consider it already made.
@@ -560,9 +523,6 @@ def taskTreeRetrieval():
 
 				found = False;
 				for FU in taskTree:
-					# FU.printFunctionalUnit()
-					# print "----------------"
-					# tempFU.printFunctionalUnit()
 					if FU.equals_functions[hierarchy_level-1](tempFU):
 						# ensuring that we do not repeat any units
 						found = True;
@@ -574,41 +534,26 @@ def taskTreeRetrieval():
 				found = False;
 				# -- both conditions true -> we have already seen the object and we have it
 				for U in itemsToSearch:
-					print U.printObject_Lvl2()
-					print tempObject.printObject_Lvl2()
 					if U.equals_functions[hierarchy_level-1](tempObject):
-						print "get inside"
 						found = True;
 						break;
 				if found == False:
-					print tempObject.printObject_Lvl2()
 					itemsToSearch.append(tempObject);
 
 	# -- saving task tree sequence to file..
 	# _file = open("FOON_task-tree-for-O" + goalType + "_S" + goalState + "_Lvl" + str(hierarchy_level) + ".txt", 'w');
+	_file = open("FOON_task_tree.txt", 'w');
 
-	# for FU in taskTree:
-	# 	# -- just write all functional units that were put into the list:
-	# 	FU.printFunctionalUnit();
-	# 	_file.write(FU.getInputsForFile());
-	# 	_file.write(FU.getMotionForFile());
-	# 	_file.write(FU.getOutputsForFile());
-	# 	_file.write("//\n");
+	for FU in taskTree:
+		# -- just write all functional units that were put into the list:
+		FU.printFunctionalUnit();
+		_file.write(FU.getInputsForFile());
+		_file.write(FU.getMotionForFile());
+		_file.write(FU.getOutputsForFile());
+		_file.write("//\n");
 	#endfor
-	return taskTree;
+	return True;
 #endef
-
-def get_object_info(task_tree):
-	object_id = []
-	object_state_id = []
-    
-	for FU in task_tree:
-		tmp = re.split('\t|\n',FU.getInputsForFile())
-		if tmp[0].startswith("O"):
-			object_id.append(int(tmp[0][1:]))
-		if tmp[3].startswith("S"):
-			object_state_id.append(tmp[3])
-	return list(set(object_id))
 
 totalNodes = constructFUGraph('kitting_experiment_lib.txt'); # -- NOTE: replace text file here with any subgraph/FOON graph file.
 
@@ -620,10 +565,6 @@ print " -> number of units in level 1: " + str(len(FOON_Lvl1));
 for F in FOON_Lvl3:
 	F.printFunctionalUnit();
 	print "//";
-# ipdb.set_trace()
+
 # findAllPaths(); # -- use this to find all paths to making an object
-task_tree = taskTreeRetrieval(); # -- use this to find a task tree
-tracking_objects_list = get_object_info(task_tree)
-
-
-
+taskTreeRetrieval(); # -- use this to find a task tree
