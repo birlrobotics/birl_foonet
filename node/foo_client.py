@@ -42,8 +42,8 @@ def read_foo(file_name):
         if i not in s:
             s.append(i)
     for id_type in s:
-        if id_type = 1:
-            object_ID = [0,1,14]
+        if id_type == 1:
+            object_ID = [0,1,8,14]
 
     return object_ID
 
