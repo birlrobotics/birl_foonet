@@ -2,9 +2,10 @@
 int32[] object_id
 ---
 #result definition
-birl_foonet/foonet[] object_pose
-int32[] missing_id
+int32[] object_state
 ---
 #feedback
-birl_foonet/foonet[] object_pose
+geometry_msgs/TransformStamped[] object_gripper_transfrom
+geometry_msgs/TransformStamped[] object_table_transfrom
+geometry_msgs/TransformStamped[] object_human_transfrom
 int32[] missing_id
