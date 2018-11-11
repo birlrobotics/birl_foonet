@@ -2,10 +2,10 @@
 int32[] object_id
 ---
 #result definition
-int32[] object_state
+int32[] found_id
+int32[] missing_id
 ---
 #feedback
 geometry_msgs/TransformStamped[] object_gripper_transfrom
 geometry_msgs/TransformStamped[] object_table_transfrom
 geometry_msgs/TransformStamped[] object_human_transfrom
-int32[] missing_id

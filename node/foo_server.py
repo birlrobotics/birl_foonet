@@ -62,6 +62,7 @@ def compute_transfom(object_pose,gripper_pose,table_pose):
 
     marker_gripper_trans = translation_from_matrix(T_gripper_marker)
     marker_gripper_quat = quaternion_from_matrix(T_gripper_marker)
+
     marker_gripper_tranform = Transform()
     marker_gripper_tranform.translation.x = marker_gripper_trans[0]
     marker_gripper_tranform.translation.y = marker_gripper_trans[1]
@@ -73,6 +74,7 @@ def compute_transfom(object_pose,gripper_pose,table_pose):
 
     marker_table_trans = translation_from_matrix(T_table_marker)
     marker_table_quat = quaternion_from_matrix(T_table_marker)
+
     marker_table_tranform = Transform()
     marker_table_tranform.translation.x = marker_table_trans[0]
     marker_table_tranform.translation.y = marker_table_trans[1]
@@ -94,38 +96,52 @@ class FoonetClass(object):
     def __init__(self):
         self._as = actionlib.SimpleActionServer("foonet_action", birl_foonet.msg.FoonetAction, execute_cb=self.execute_cb, auto_start = False)
         self._as.start()
-
-    def execute_cb(self, goal):
-        
-        r = rospy.Rate(_rate)
-        
-        rospy.sleep(1)
         # ipdb.set_trace()
+    def execute_cb(self, goal):
+        if self._as.is_active():
+            print "action server activated"
+        rospy.sleep(1)
+        r = rospy.Rate(_rate)
+
+        env_id = []
+        for msg in marker_msg: 
+            env_id.append(msg.id)
+
+        ipdb.set_trace()
         for _obj_idx in goal.object_id:
-            for msg in marker_msg:
-                if _obj_idx == msg.id:
-                    tem_dic = compute_transfom(msg.pose.pose,right_endpoint_msg,table_pose)
-                    T_object_gripper = TransformStamped()
-                    T_object_gripper.header = msg.header  
-                    T_object_gripper.transform = tem_dic["marker_gripper"]
-                    T_object_gripper.child_frame_id = str(msg.id)
-
-                    T_object_table = TransformStamped()
-                    T_object_table.header = msg.header
-                    T_object_table.transform = tem_dic["marker_table"]
-                    T_object_table.child_frame_id = str(msg.id)
-                    self._feedback.object_gripper_transfrom.append(T_object_gripper)
-                    self._feedback.object_table_transfrom.append(T_object_table)
-                    break
+            if _obj_idx in env_id:  
+                if  _obj_idx not in self._result.found_id:
+                    self._result.found_id.append(_obj_idx)
             else:
-                if _obj_idx not in self._feedback.missing_id:
-                    self._feedback.missing_id.append(_obj_idx)
-            self._as.publish_feedback(self._feedback)
+                if _obj_idx not in self._result.missing_id:
+                    self._result.missing_id.append(_obj_idx)
+        
+        self._as.set_succeeded(self._result)    
 
-            r.sleep()
+        # ipdb.set_trace()
+        while not rospy.is_shutdown():
+            for _obj_idx in self._result.found_id:
+                for msg in marker_msg:
+                    if _obj_idx == msg.id:
+                        tem_dic = compute_transfom(msg.pose.pose,right_endpoint_msg,table_pose)
+                        T_object_gripper = TransformStamped()
+                        T_object_gripper.header = msg.header  
+                        T_object_gripper.transform = tem_dic["marker_gripper"]
+                        T_object_gripper.child_frame_id = str(msg.id)
+
+                        T_object_table = TransformStamped()
+                        T_object_table.header = msg.header
+                        T_object_table.transform = tem_dic["marker_table"]
+                        T_object_table.child_frame_id = str(msg.id)
+                        self._feedback.object_gripper_transfrom.append(T_object_gripper)
+                        self._feedback.object_table_transfrom.append(T_object_table)                        
+                        break
+            self._as.publish_feedback(self._feedback)
             
-        self._result.object_state = self._feedback.missing_id
-        self._as.set_succeeded(self._result)
+            r.sleep()
+                
+
+            
 
 if __name__ == '__main__':
     rospy.init_node('foonet_server')

@@ -25,7 +25,7 @@ def read_foo(file_name):
             x += 1
             line = items[x]
             stateParts = line.split("S"); # get the Object's state identifier by splitting first instance of S
-            stateParts = stateParts[1].split("\t");
+            stateParts = stateParts[1].split("\t")
             state_id = int(stateParts[0])
     
             state_dic = {"phase":phase_count,
@@ -44,7 +44,6 @@ def read_foo(file_name):
     for id_type in s:
         if id_type == 1:
             object_ID = [0,1,8,14]
-
     return object_ID
 
 
