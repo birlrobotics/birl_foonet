@@ -13,7 +13,7 @@ def read_foo(file_name):
     state_id = None
     object_info = []
     x = 0
-
+    # processing file to get object id and state
     while x < len(items):
         line = items[x]
         if line.startswith("//"):
@@ -34,14 +34,13 @@ def read_foo(file_name):
         object_info.append(state_dic) 
         x += 1
     obj_ids = []
+
     for dic in object_info:
-        obj_ids.append(dic["object_id"])
-    
-    s = []
-    for i in obj_ids:
-        if i not in s:
-            s.append(i)
-    for id_type in s:
+        if dic["object_id"] not in object_info:
+            obj_ids.append(dic["object_id"])
+
+    # Assume that object type one have object id 0,1,8,14, just for test
+    for id_type in obj_ids:
         if id_type == 1:
             object_ID = [0,1,8,14]
     return object_ID
@@ -57,9 +56,9 @@ def foonet_client(object_id):
         return client.get_result()
 
 if __name__ == '__main__':
-    
     rospy.init_node('foonet_client_py')
-    file_name = "../scripts/FOON_task_tree.txt"
-    object_id = read_foo(file_name)
-    result = foonet_client(object_id)
+    file_name = "../scripts/FOON_task_tree.txt" # foonet file path
+    object_id = read_foo(file_name) # get object goal id
+    result = foonet_client(object_id) # check if goal id is available in env
     print (result)
+    rospy.spin()
