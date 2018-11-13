@@ -1,12 +1,28 @@
-O1	box_object	1
-S1	on_the_table  
+O0	object_1	1
+S1	on_the_table 
+O8	object_2	1 
+S1	on_the_table
+O3	object_3	1 
+S1	on_the_table   
 M0	pick	Assumed	Assumed
-O1	box_object	1
-S2	in_the_gripper   
-// 
-O1	box_object	1
+O0	object_1	1
 S2	in_the_gripper
+O8	object_2	1 
+S2	in_the_gripper
+O3	object_3	1 
+S2	in_the_gripper 
+// 
+O0	object_1	1
+S2	in_the_gripper
+O8	object_2	1 
+S2	in_the_gripper
+O3	object_3	1 
+S2	in_the_gripper 
 M1	place	Assumed	Assumed
-O1	box_object	1
+O0	object_1	1
+S3	in_the_container
+O8	object_2	1 
+S3	in_the_container
+O3	object_3	1 
 S3	in_the_container
 // 

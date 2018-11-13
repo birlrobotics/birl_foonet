@@ -1,2 +1,4 @@
 O1	box_objects	1
 S1	on the table  
+O2	box_object_2	1 
+S1	on_the_table  

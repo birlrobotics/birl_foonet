@@ -1,11 +1,16 @@
- #! /usr/bin/env python
+#! /usr/bin/env python
+
 import rospy
 import actionlib
 import birl_foonet.msg
 from collections import OrderedDict
+import os
+import ipdb
+# read conf file
+file_path = os.path.dirname(__file__)
+file_name = os.path.join(file_path, 'kitting_experiment_library.txt')
 
 def read_foo(file_name):
-    
     _file = open(file_name, 'r')
     items = _file.read().splitlines()
     phase_count = 0
@@ -34,17 +39,11 @@ def read_foo(file_name):
         object_info.append(state_dic) 
         x += 1
     obj_ids = []
-
     for dic in object_info:
-        if dic["object_id"] not in object_info:
+        if dic["object_id"] not in obj_ids:
             obj_ids.append(dic["object_id"])
 
-    # Assume that object type one have object id 0,1,8,14, just for test
-    for id_type in obj_ids:
-        if id_type == 1:
-            object_ID = [0,1,8,14]
-    return object_ID
-
+    return obj_ids
 
 def foonet_client(object_id):
 
@@ -57,8 +56,7 @@ def foonet_client(object_id):
 
 if __name__ == '__main__':
     rospy.init_node('foonet_client_py')
-    file_name = "../scripts/FOON_task_tree.txt" # foonet file path
     object_id = read_foo(file_name) # get object goal id
     result = foonet_client(object_id) # check if goal id is available in env
     print (result)
-    rospy.spin()
+    # rospy.spin()
