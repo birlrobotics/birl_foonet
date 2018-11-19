@@ -52,6 +52,43 @@ def compute_transfom(object_pose,gripper_pose,table_pose):
     return dic
 
 
+
+
+def read_foo(file_name):
+    _file = open(file_name, 'r')
+    items = _file.read().splitlines()
+    phase_count = 0
+    object_id = None
+    state_id = None
+    object_info = []
+    x = 0
+    # processing file to get object id and state
+    while x < len(items):
+        line = items[x]
+        if line.startswith("//"):
+            phase_count += 1
+        elif line.startswith("O"):
+            objectParts = line.split("O")
+            objectParts = objectParts[1].split("\t")
+            object_id = int(objectParts[0])
+            x += 1
+            line = items[x]
+            stateParts = line.split("S"); # get the Object's state identifier by splitting first instance of S
+            stateParts = stateParts[1].split("\t")
+            state_id = int(stateParts[0])
+    
+            state_dic = {"phase":phase_count,
+                        "object_id":object_id,
+                        "state_id":state_id,}
+        object_info.append(state_dic) 
+        x += 1
+    obj_ids = []
+    for dic in object_info:
+        if dic["object_id"] not in obj_ids:
+            obj_ids.append(dic["object_id"])
+
+    return obj_ids
+
 table_pose = np.array(
         ((1.0, 0.0, 0.0, -0.0),
         (0.0, 1.0, 0.0, -0.0),

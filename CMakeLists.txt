@@ -202,3 +202,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_executable(foo_topic_publisher_main src/foo_topic_publisher_main.cpp)
+add_library(foo_topic_publisher src/foo_topic_publisher.cpp)
+target_link_libraries(foo_topic_publisher_main foo_topic_publisher ${catkin_LIBRARIES})
+# add_dependencies(add_two_ints_server beginner_tutorials_gencpp)

@@ -2,6 +2,7 @@
 
 import rospy
 import actionlib
+import os
 import numpy as np
 from copy import deepcopy
 # normal libraries
@@ -16,8 +17,7 @@ from tf.transformations import (
     quaternion_from_matrix,
 )
 import ipdb
-from foo_help_fnc import compute_transfom,table_pose
-
+from foo_help_fnc import compute_transfom,table_pose,read_foo
 
 # global variables
 marker_msg = None
@@ -25,7 +25,8 @@ robot_endpoint_msg = None
 _rate = 100
 flag_marker = False
 flag_endpoint = False
-
+dir_of_this_script = os.path.dirname(os.path.realpath(__file__))
+file_name = os.path.join(dir_of_this_script, "kitting_experiment_library.txt")
 
 
 def image_proc_cb(msg):
@@ -37,20 +38,22 @@ def image_proc_cb(msg):
 
 def robot_endpoint_cb(data):
     global flag_endpoint,robot_endpoint_msg
-    if not flag_endpoint:
-        flag_endpoint = True
+    if not flag_endpoint:    
         print 'endpoint state signals is OK!'
+        flag_endpoint = True
     robot_endpoint_msg = data.pose
 
 def transform_pub():
     pub = rospy.Publisher('/foonet/object_transform', foonet, queue_size=10)
+    goal = read_foo(file_name)
     foonet_msg = foonet()
-    goal = [0,2,8]
+    foonet_msg.object_id = goal
+    # ipdb.set_trace()
     while not rospy.is_shutdown():
         foonet_msg = pub_object_state(goal,foonet_msg)
-        foonet_msg =pub_object_transform(foonet_msg)
+        foonet_msg = pub_object_transform(foonet_msg)
         pub.publish(foonet_msg)
-        foonet_msg = foonet() # re-init feedback
+        foonet_msg = foonet()  # re-init feedback
     # duo to the need of continously publishing feedback,so we have while.
     # feedback: transfrom bettwen object and robot gripper
     #           transform bettwen object and table(tale pose is set by human)
@@ -74,7 +77,6 @@ def pub_object_transform(foonet_msg):
     return foonet_msg
     
 
-
 def pub_object_state(goal,foonet_msg):
     # check the objects available in the  environment
     env_id = []
@@ -83,15 +85,15 @@ def pub_object_state(goal,foonet_msg):
 
     # compare the goal_id and the env_id, if goal_id is in the env_id, then add
     # to found_id, if not, then add to missing id. finally send as result to client 
-    for _obj_idx in goal.object_id:
+    for _obj_idx in goal:
         if _obj_idx in env_id:  
-            if  _obj_idx not in self._result.found_id:
+            if  _obj_idx not in foonet_msg.found_id:
                 foonet_msg.found_id.append(_obj_idx)
         else:
-            if _obj_idx not in self._result.missing_id:
+            if _obj_idx not in foonet_msg.missing_id:
                 foonet_msg.missing_id.append(_obj_idx)
-    foonet_msg.found_id = sorted(self._result.found_id)
-    foonet_msg.missing_id = sorted(self._result.missing_id)
+    foonet_msg.found_id = sorted(foonet_msg.found_id)
+    foonet_msg.missing_id = sorted(foonet_msg.missing_id)
     return foonet_msg
 
 def select_image_prec(image_proc_method = "ar_marker"):           
@@ -108,11 +110,12 @@ def select_image_prec(image_proc_method = "ar_marker"):
             rospy.Subscriber("ar_pose_marker", AlvarMarkers, cb)
         else:
             rospy.logfatal("Could not connect to /ar_pose_marker server, is the server node running?")
-            rospy.signal_shutdown("Required component missing"); 
+            rospy.signal_shutdown("Required component missing")
 
 if __name__ == '__main__':
     rospy.init_node('foonet_server') # rosnode name 
     select_image_prec("ar_marker")
     rospy.Subscriber("/robot/limb/right/endpoint_state", EndpointState, robot_endpoint_cb)
-    
-    # rospy.spin() # keep code running 
+    rospy.sleep(1)   
+    transform_pub()
+    rospy.spin() # keep code running 
